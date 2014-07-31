@@ -21,6 +21,10 @@ func ProcOrder(command string, files []string) []string {
       processed = RegexpReplace(files, args)
     case "order":
       processed = Order(files, args)
+    case "add_front":
+      processed = AddFront(files, args)
+    case "add_rear":
+      processed = AddRear(files, args)
     default:
       fmt.Println(command + " command not found.")
       os.Exit(1)
