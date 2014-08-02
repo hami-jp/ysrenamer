@@ -1,4 +1,4 @@
-## ysrenamer
+## ysrenamer [![wercker status](https://app.wercker.com/status/c2762d14ee0f1f68c2079ab639758b95/s/master "wercker status")](https://app.wercker.com/project/bykey/c2762d14ee0f1f68c2079ab639758b95)
 シンプルなリネームツールです。
 
 ## 概要
