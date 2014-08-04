@@ -5,6 +5,7 @@ import (
   "os"
   "path/filepath"
 
+  "code.google.com/p/go.text/unicode/norm"
   "github.com/yuukichi/ysrenamer/act"
 )
 
@@ -15,7 +16,13 @@ func main() {
   }
 
   files := os.Args[2:]
-  dests := act.ProcOrder(os.Args[1], files)
+  files_encoded := make([]string, len(files))
+  for k, v := range files {
+    output := DenormalizeUnicodeString(v)
+    files_encoded[k] = output
+  }
+
+  dests := act.ProcOrder(os.Args[1], files_encoded)
  
   for i, src := range files {
     dest := dests[i]
@@ -33,4 +40,10 @@ func main() {
     }
     fmt.Println(src + " -> " + dest)
   }
+}
+
+func DenormalizeUnicodeString(str string) string {
+  buf := []byte(str)
+  buf = norm.NFC.Bytes(buf)
+  return string(buf)
 }
