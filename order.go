@@ -1,30 +1,30 @@
-package act
+package ysrenamer
 
 import (
   "fmt"
   "os"
 
-  "github.com/yuukichi/ysrenamer"
+  "github.com/yuukichi/ysrenamer/act"
 )
 
 func ProcOrder(command string, files []string) []string {
   processed := make([]string, len(files))
 
-  conf := ysrenamer.Config.Get(command) 
+  conf := Config.Get(command) 
   action, _ := conf.Get("action").String()
   args, _ := conf.Get("args").StringArray()
 
   switch action {
     case "replace":
-      processed = Replace(files, args) 
+      processed = act.Replace(files, args) 
     case "regexp_replace":
-      processed = RegexpReplace(files, args)
+      processed = act.RegexpReplace(files, args)
     case "order":
       processed = Order(files, args)
     case "add_front":
-      processed = AddFront(files, args)
+      processed = act.AddFront(files, args)
     case "add_rear":
-      processed = AddRear(files, args)
+      processed = act.AddRear(files, args)
     default:
       fmt.Println(command + " command not found.")
       os.Exit(1)

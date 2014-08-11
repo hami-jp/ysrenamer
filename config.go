@@ -7,6 +7,7 @@ import (
   "runtime"
 
   . "github.com/bitly/go-simplejson"
+  "code.google.com/p/mahonia"
 )
 
 var ConfigPath string = func() string {
@@ -18,27 +19,39 @@ var ConfigPath string = func() string {
   }
 }()
 
-var Config *Json = func() *Json {
-  var raw_data []byte
-  var err error
-  var js *Json
+var Config *Json = readConfigFile()
 
-  _, err = os.Stat(ConfigPath)
-  if os.IsNotExist(err) {
-    raw_data = []byte("{}")
-    err = ioutil.WriteFile(ConfigPath, raw_data, 0644)
-  } else {
-    raw_data, err = ioutil.ReadFile(ConfigPath)
-  }
-  if err != nil {
-    fmt.Println(err.Error())
-    os.Exit(1)
-  }
-
-  js, err = NewJson(raw_data)
+func readConfigFile() *Json {
+  raw_data := readFile(ConfigPath)
+  js, err := NewJson(raw_data)
   if err != nil {
     fmt.Println(err.Error())
     os.Exit(1)
   }
   return js
-}()
+}
+
+func readFile(path string) []byte {
+  var data []byte
+
+  _, err := os.Stat(path)
+  if os.IsNotExist(err) {
+    data = []byte("{}")
+    err = ioutil.WriteFile(path, data, 0644)
+  } else {
+    data, err = ioutil.ReadFile(path)
+  }
+
+  if err != nil {
+    fmt.Println(err.Error())
+    os.Exit(1)
+  }
+
+  data = []byte(convertStringToUtf8(string(data)))
+
+  return data
+}
+
+func convertStringToUtf8(str string) string {
+  return mahonia.NewDecoder("utf-8").ConvertString(str)
+}
